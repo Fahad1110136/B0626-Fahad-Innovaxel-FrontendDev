@@ -1,154 +1,129 @@
-# 🌿 Verdant — Personal Expense Tracker
+# 🌿 Verdant — Pocket Expense Tracker
 
-A single-page application (SPA) for tracking personal expenses. Now track your pocket with modern interface for efficient management.
----
-
-## 📸 Overview
-
-Verdant lets you add, view, edit, and delete personal expenses with a visual summary of your spending habits — all stored locally in your browser with no backend required.
+A complete personal finance web application. Track expenses, view spending summaries with charts, and manage your own private account — all wrapped in a calm, editorial style design.
 
 ---
 
 ## ✨ Features
 
-- **Add Expense** — Title, Amount (PKR), Category, Date, and optional Notes
-- **View All Expenses** — Sorted by date, most recent first
-- **Edit & Delete** — Inline action buttons on every expense row
-- **Summary View** — Total spent, category-wise pie chart and bar chart, and a detailed breakdown table
-- **Search** — Live title search across all expenses
-- **Filter by Category** — Dropdown to filter by any category
-- **Filter by Date Range** — From/To date pickers with inclusive boundaries
-- **Date Range Validation** — Error shown if "From" date is set after "To" date
-- **Future Date Blocked** — Cannot add or edit an expense with a future date
-- **Input Validation** — Required fields enforced, no negative or zero amounts allowed
-- **Responsive Design** — Works on mobile and desktop
-- **Smooth UI/UX** — Slide-in animations, hover states, toast notifications
-- **LocalStorage Persistence** — Data survives page refreshes
-
----
-
-## 🛠 Tech Stack
-
-| Tool | Purpose |
-|---|---|
-| React 18 | UI framework (SPA) |
-| Vite | Development server and bundler |
-| Recharts | Pie chart and bar chart |
-| LocalStorage | Client-side data persistence |
-| Google Fonts | Playfair Display + Lato typography |
-
----
-
-## 🎨 Design
-
-**Theme:** Eco-friendly organic light theme — warm parchment backgrounds, forest greens, earthy ambers, and terracotta accents.
-
-**Typography:** *Playfair Display* (serif) for headings paired with *Lato* for UI text.
-
-**Colors:** Each expense category has its own distinct organic color identity.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure you have Node.js v18 or higher installed:
-
-```bash
-node -v
-npm -v
-```
-
-### Installation
-
-**1. Clone the repository**
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-```
-
-**2. Install dependencies**
-```bash
-npm install
-npm install recharts
-```
-
-**3. Replace the default App component**
-
-update `src/main.jsx` to:
-
-```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './ExpenseTracker.jsx'
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
-```
-
-**4. Start the development server**
-```bash
-npm run dev
-```
-
-Open your browser at `http://localhost:5173`
+- 🏠 **Public landing page** — every visitor lands here first, regardless of login history
+- 🔐 **Sign up / Sign in** — JWT-based authentication, bcrypt-hashed passwords
+- 👤 **Personal data** — each user only ever sees their own expenses
+- ➕ **Add / edit / delete expenses** — title, amount, category, date, optional notes
+- 🏷️ **8 built-in categories** — Food, Transport, Utilities, Health, Entertainment, Shopping, Education, Other
+- 🔍 **Search & filter** — by keyword, category, and date range
+- 📊 **Summary dashboard** — pie chart by category, bar chart by month, full category breakdown table
+- 🚪 **Logout always returns to the home page** — never auto-logs back in on next visit
 
 ---
 
 ## 📁 Project Structure
 
 ```
-verdant-tracker/
-├── src/
-│   ├── ExpenseTracker.jsx   # Entire application (components + styles)
-│   └── main.jsx             # Entry point
-├── index.html
-├── package.json
-├── vite.config.js
-└── README.md
+verdant/
+├── package.json                      
+├── README.md                          
+├── backend/                           
+│   ├── package.json
+│   ├── .env
+│   └── src/
+│       ├── server.js                  
+│       ├── models/
+│       ├── routes/
+│       └── middleware/
+└── frontend/                          
+    ├── index.html
+    ├── vite.config.js                 
+    ├── package.json
+    ├── .env
+    ├── public/
+    └── src/
+        ├── main.jsx                  
+        ├── App.jsx                    
+        ├── AppShell.jsx                
+        ├── ExpenseTrackerConnected.jsx 
+        ├── index.css
+        ├── context/
+        ├── services/
+        └── pages/
 ```
 
-> All styling is done via inline style objects and a single injected `<style>` tag inside the component. No external CSS files are needed.
+## ⚙️ Prerequisites
+
+- 🟢 **Node.js** v18 or higher
+- 🍃 **MongoDB** — either:
+  - Installed locally (`mongod` running on port 27017), or
+  - A free **MongoDB Atlas** cluster (recommended — also needed for deployment)
 
 ---
 
-## 📦 Build for Production
+## 🛠️ Local Setup
+
+### 📦 1. Install dependencies
+
+From the project root:
 
 ```bash
-npm run build
+npm install
 ```
 
-Output will be in the `dist/` folder, ready to deploy on Vercel, Netlify, or any static host.
+This installs the root tooling plus both `backend/` and `frontend/` dependencies.
+
+### ⚙️ 2. Configure the backend
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Open `.env` and fill in real values:
+
+```dotenv
+PORT=5000
+MONGO_URI=mongodb+srv://<user>:<password>@cluster1.xxxxx.mongodb.net/verdant?retryWrites=true&w=majority
+JWT_SECRET=<a long random string — see below>
+JWT_EXPIRES_IN=7d
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+```
+### 🖥️ 3. Configure the frontend
+
+```bash
+cd frontend
+cp .env.example .env
+```
+
+## 🔑 Environment Variables
+
+### 🖥️ Backend (`backend/.env`)
+
+| Variable | Description | Example |
+|---|---|---|
+| `PORT` | Port the Express server listens on | `5000` |
+| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.../verdant` |
+| `JWT_SECRET` | Secret used to sign auth tokens | long random hex string |
+| `JWT_EXPIRES_IN` | How long a login session lasts | `7d` |
+| `NODE_ENV` | Environment mode | `development` or `production` |
+| `FRONTEND_URL` | Allowed CORS origin | `http://localhost:5173` |
+
+### 🌐 Frontend (`frontend/.env`)
+
+| Variable | Description | Example |
+|---|---|---|
+| `VITE_API_URL` | Base URL of the backend API. Leave blank locally (proxy handles it) | `https://verdant-backend.onrender.com/api` |
 
 ---
 
-## 🗂 Expense Categories
+## 🔒 Security Checklist
 
-| Category | Color |
-|---|---|
-| Food | Forest Green |
-| Transport | Deep Teal |
-| Utilities | Warm Amber |
-| Health | Terracotta |
-| Entertainment | Sage |
-| Shopping | Earth Brown |
-| Education | Slate Blue |
-| Other | Muted Gray |
+Before going live:
+
+- [ ] 🔑 `JWT_SECRET` is a long, random string — never reused from development
+- [ ] 🌍 `NODE_ENV=production` is set on the backend
+- [ ] 🔐 HTTPS is enabled on both frontend and backend (Let's Encrypt / host-provided SSL)
+- [ ] 🌐 `FRONTEND_URL` on the backend matches your exact production frontend domain (strict CORS)
+- [ ] 🍃 MongoDB Atlas network access is restricted to known IPs where possible (instead of `0.0.0.0/0`) for production-grade security
+- [ ] 🙈 `.env` files are never committed to git (already covered by `.gitignore`)
 
 ---
 
-## 🎨 Figma Design
-
-Link: https://www.figma.com/make/HMmBBSrRePV3m8vsig5zCE/Personal-Expense-Tracker-App?t=9oE8wE9sXP2Gp7mp-20&fullscreen=1
-
----
-
-## 📄 License: 
-
-MIT Licensed and secured.
-
----
